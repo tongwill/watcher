@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<beans:beans xmlns="http://www.springframework.org/schema/mvc"
+             xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+             xmlns:beans="http://www.springframework.org/schema/beans"
+             xmlns:context="http://www.springframework.org/schema/context"
+             xsi:schemaLocation="http://www.springframework.org/schema/mvc
+             http://www.springframework.org/schema/mvc/spring-mvc.xsd
+            http://www.springframework.org/schema/beans
+            http://www.springframework.org/schema/beans/spring-beans.xsd
+             http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd">
+
+    <annotation-driven/>
+
+    <context:component-scan base-package="com.will.watcher"/>
+
+    <interceptors>
+        <beans:bean class="io.terminus.pampas.webc.interceptor.AppInterceptor"/>
+    </interceptors>
+
+    <beans:bean class="org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerMapping">
+        <beans:property name="defaultHandler" ref="watcher"/>
+    </beans:bean>
+
+</beans:beans>
