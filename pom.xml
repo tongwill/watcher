@@ -131,7 +131,7 @@
     </dependencies>
 
     <build>
-        <finalName>cdk-web</finalName>
+        <finalName>watcher</finalName>
         <resources>
             <resource>
                 <directory>src/main/resources</directory>
