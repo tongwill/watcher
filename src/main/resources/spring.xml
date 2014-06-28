@@ -19,6 +19,7 @@
 
     <bean id="setting" class="com.will.watcher.util.Setting">
         <property name="assetsHome" value="${assetsHome}"/>
+        <property name="dataHome" value="${dataHome}"/>
     </bean>
 
     <bean id="baseUser" class="io.terminus.pampas.common.BaseUser">
@@ -27,7 +28,7 @@
         <property name="nickName" value="${userNickName}" />
     </bean>
 
-    <dubbo:application name="watcher"  />
+    <dubbo:application name="watcher"/>
     
     <dubbo:registry address="${dubboRegistry}" default="true"/>
     <dubbo:protocol name="dubbo" port="${dubboPort}" threads="10" heartbeat="100000"/>
