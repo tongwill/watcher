@@ -3,17 +3,15 @@ package com.will.watcher.handlebar;
 import com.github.jknack.handlebars.Handlebars;
 import com.github.jknack.handlebars.Helper;
 import com.github.jknack.handlebars.Template;
-import com.github.jknack.handlebars.io.TemplateLoader;
 import com.google.common.base.Throwables;
 import com.google.common.collect.Maps;
-import io.terminus.common.utils.JsonMapper;
-import io.terminus.pampas.engine.handlebars.GreatTemplateLoader;
+import com.will.watcher.util.JsonUtil;
+import com.will.watcher.yaml.DataEngine;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import javax.servlet.ServletContext;
 import java.io.FileNotFoundException;
 import java.util.LinkedHashMap;
 import java.util.Map;
@@ -26,11 +24,15 @@ public class Handlebar {
 
     private DataEngine dataEngine;
 
+    private JsonUtil jsonUtil;
+
+    private GreatTemplateLoader greatTemplateLoader;
+
     @Autowired
-    public Handlebar(DataEngine dataEngine,ServletContext servletContext) {
-        TemplateLoader templateLoader = new GreatTemplateLoader(servletContext, "/views", ".hbs");
-        this.handlebars = new Handlebars(templateLoader);
+    public Handlebar(DataEngine dataEngine,JsonUtil jsonUtil,GreatTemplateLoader greatTemplateLoader) {
+        this.handlebars = new Handlebars(greatTemplateLoader);
         this.dataEngine=dataEngine;
+        this.jsonUtil=jsonUtil;
     }
 
     public <T> void registerHelper(String name, Helper<T> helper) {
@@ -63,7 +65,9 @@ public class Handlebar {
     public String execComponent(String path,Map<String, Object> context) {
         try{
             String json=dataEngine.getJsonFromData(path,context,true);
-            context.put("_DATA_",JsonMapper.nonEmptyMapper().fromJson(json, LinkedHashMap.class));
+            if (json.length()!=0){
+                context.put("_DATA_",jsonUtil.fromJson(json, LinkedHashMap.class));
+            }
             return execPath(path, context, true);
         }catch(Exception e){
             LOG.error(Throwables.getStackTraceAsString(e));

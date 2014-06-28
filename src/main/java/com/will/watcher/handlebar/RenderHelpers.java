@@ -7,9 +7,8 @@ import com.github.jknack.handlebars.TagType;
 import com.google.common.base.Objects;
 import com.google.common.collect.Maps;
 import com.google.common.html.HtmlEscapers;
-import io.terminus.common.utils.JsonMapper;
-import io.terminus.pampas.engine.Setting;
-import io.terminus.pampas.engine.config.ConfigManager;
+import com.will.watcher.util.JsonUtil;
+import com.will.watcher.yaml.ConfigManager;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -30,6 +29,9 @@ public class RenderHelpers {
 
     @Autowired
     private ConfigManager configManager;
+
+    @Autowired
+    private JsonUtil jsonUtil;
 
     @PostConstruct
     private void init() {
@@ -52,7 +54,7 @@ public class RenderHelpers {
                     }
                 }
                 if ((options.tagType == TagType.SECTION) && (StringUtils.isNotBlank(options.fn.text()))) {
-                    Map config = (Map) JsonMapper.nonEmptyMapper().fromJson(options.fn.text(), Map.class);
+                    Map config = (Map) jsonUtil.fromJson(options.fn.text(), Map.class);
                     if ((config != null) && (!config.isEmpty())) {
                         tempContext.put("_CDATA_KEYS_", config.keySet());
                         tempContext.putAll(config);
@@ -67,10 +69,8 @@ public class RenderHelpers {
                 if ((firstParam != null) && ((firstParam instanceof String)) && (StringUtils.isNotBlank((String) firstParam))) {
                     component.setService((String) firstParam);
                 } else {
-                    io.terminus.pampas.engine.config.model.Component result = RenderHelpers.this.configManager.findComponent(Setting.getCurrentAppKey(), compPath);
-                    if (result == null)
-                        RenderHelpers.log.warn("can't find component config for path:{}", compPath);
-                    else {
+                    io.terminus.pampas.engine.config.model.Component result = configManager.findComponent(compPath);
+                    if (result != null){
                         component = result;
                     }
                 }
@@ -81,25 +81,6 @@ public class RenderHelpers {
                 return new Handlebars.SafeString(RenderHelpers.this.handlebar.execComponent(compPath, tempContext));
             }
         });
-//        this.handlebar.registerHelper("inject", new Helper<String>() {
-//            public CharSequence apply(String compPath, Options options) throws IOException {
-//                boolean isDesignMode = options.get("_DESIGN_MODE_") != null;
-//                Map tempContext = Maps.newHashMap();
-//                if ((options.context.model() instanceof Map)) {
-//                    tempContext.putAll((Map) options.context.model());
-//                    Set<String> cdataKeys = (Set) tempContext.remove("_CDATA_KEYS_");
-//                    if (cdataKeys != null) {
-//                        for (String key : cdataKeys) {
-//                            tempContext.remove(key);
-//                        }
-//                    }
-//                    if (isDesignMode) {
-//                        tempContext.remove("_COMP_DATA_");
-//                    }
-//                }
-//                return new Handlebars.SafeString(handlebar.execComponent(compPath, tempContext));
-//            }
-//        });
         this.handlebar.registerHelper("component", new Helper<String>() {
             public CharSequence apply(String className, Options options)
                     throws IOException {

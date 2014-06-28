@@ -1,9 +1,9 @@
 package com.will.watcher.dubbo;
 
 import com.google.common.base.Throwables;
-import com.will.watcher.CommonUtil;
+import com.will.watcher.util.CommonUtil;
 import com.will.watcher.WatcherVariable;
-import com.will.watcher.handlebar.ServiceData;
+import com.will.watcher.yaml.model.ServiceData;
 import io.terminus.pampas.engine.config.model.Service;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -20,6 +20,7 @@ import java.util.Map;
 public class DubboListener {
     @Autowired
     private DubboHelper dubboHelper;
+
     private static final Logger LOG = LoggerFactory.getLogger(DubboListener.class);
 
     public String listener(Service service,Map<String, Object> context){

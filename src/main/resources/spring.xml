@@ -17,17 +17,10 @@
 
     <context:component-scan base-package="io.terminus.pampas"/>
 
-    <bean id="implantApp" class="io.terminus.pampas.engine.model.App">
-        <property name="key" value="${key}"/>
-        <property name="domain" value="${www.haier.cn}"/>
+    <bean id="setting" class="com.will.watcher.util.Setting">
         <property name="assetsHome" value="${assetsHome}"/>
-        <property name="configPath" value="${configPath}" />
     </bean>
-    <bean id="setting" class="io.terminus.pampas.engine.Setting">
-        <property name="mode" value="IMPLANT"/>
-        <property name="implantApp" ref="implantApp"/>
-        <property name="devMode" value="true"/>
-    </bean>
+
     <bean id="baseUser" class="io.terminus.pampas.common.BaseUser">
         <property name="id" value="${userId}"/>
         <property name="name" value="${userName}"/>

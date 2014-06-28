@@ -1,6 +1,6 @@
 package com.will.watcher;
 
-import com.will.watcher.handlebar.BackData;
+import com.will.watcher.yaml.model.BackData;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -10,6 +10,5 @@ import java.util.List;
  */
 public class WatcherVariable {
     public static boolean IS_DUBBO_LISTENER=false;
-    public static List<BackData> dataList=new ArrayList<BackData>();
     public static BackData BACK_DATA=new BackData();
 }

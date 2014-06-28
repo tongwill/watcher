@@ -6,9 +6,8 @@ import com.google.common.base.Objects;
 import com.google.common.base.Splitter;
 import com.google.common.base.Strings;
 import com.google.common.collect.ImmutableMap;
-import io.terminus.common.utils.JsonMapper;
-import io.terminus.common.utils.NumberUtils;
-import io.terminus.common.utils.Splitters;
+import com.will.watcher.util.JsonUtil;
+import com.will.watcher.util.NumberUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -26,6 +25,9 @@ public class HandlebarHelpers {
     @Autowired
     private Handlebar handlebar;
 
+    @Autowired
+    private JsonUtil jsonUtil;
+
     private static final DecimalFormat DECIMAL_FORMAT = new DecimalFormat("#.###");
 
     private static final Splitter splitter = Splitter.on(",");
@@ -34,7 +36,7 @@ public class HandlebarHelpers {
     public void init() {
         this.handlebar.registerHelper("json", new Helper() {
             public CharSequence apply(Object context, Options options) throws IOException {
-                return JsonMapper.nonEmptyMapper().toJson(context);
+                return jsonUtil.toJson(context);
             }
         });
         this.handlebar.registerHelper("match", new Helper<String>() {
@@ -217,7 +219,7 @@ public class HandlebarHelpers {
                 if ((context instanceof List))
                     list = (List) context;
                 else {
-                    list = Splitters.COMMA.splitToList(String.valueOf(context));
+                    list = Splitter.on(",").trimResults().splitToList(String.valueOf(context));
                 }
                 if ((list == null) || (list.isEmpty())) {
                     return null;

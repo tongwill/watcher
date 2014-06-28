@@ -14,10 +14,6 @@
 
     <context:component-scan base-package="com.will.watcher"/>
 
-    <interceptors>
-        <beans:bean class="io.terminus.pampas.webc.interceptor.AppInterceptor"/>
-    </interceptors>
-
     <beans:bean class="org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerMapping">
         <beans:property name="defaultHandler" ref="watcher"/>
     </beans:bean>

@@ -1,8 +1,7 @@
 package com.will.watcher.dubbo;
 
-import io.terminus.common.utils.JsonMapper;
+import com.will.watcher.util.JsonUtil;
 import io.terminus.pampas.engine.config.model.Service;
-import io.terminus.pampas.engine.mapping.DubboExecutor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.stereotype.Component;
@@ -22,6 +21,9 @@ public class DubboHelper {
 
     @Autowired
     private DubboExecutor dubboExecutor;
+
+    @Autowired
+    private JsonUtil jsonUtil;
 
     public String invoke(String uri,String app,String query)throws Exception{
         Service service=new Service();
@@ -45,7 +47,7 @@ public class DubboHelper {
         if (result instanceof  String){
             json=((String) result).toString();
         }else if(result instanceof  LinkedHashMap){
-            json=JsonMapper.nonEmptyMapper().toJson(result);
+            json=jsonUtil.toJson(result);
         }
         return json;
     }

@@ -1,16 +1,13 @@
 package com.will.watcher;
 
 import com.google.common.base.Throwables;
-import com.will.watcher.dubbo.DubboHandler;
-import com.will.watcher.dubbo.ListenerHandler;
-import com.will.watcher.handlebar.AjaxHandler;
 import com.will.watcher.handlebar.Handlebar;
-import com.will.watcher.handlebar.RefreshHandler;
-import io.terminus.common.utils.Splitters;
+import com.will.watcher.handler.AjaxHandler;
+import com.will.watcher.handler.AssetsHandler;
+import com.will.watcher.handler.DubboHandler;
+import com.will.watcher.handler.ListenerHandler;
 import io.terminus.pampas.common.BaseUser;
 import io.terminus.pampas.common.UserUtil;
-import io.terminus.pampas.engine.model.App;
-import io.terminus.pampas.webc.controller.AssetsHandler;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -44,16 +41,9 @@ public class Watcher {
     @Autowired
     private BaseUser baseUser;
 
-    @Autowired
-    private RefreshHandler refreshHandler;
-
-    @Autowired
-    private App app;
-
     @RequestMapping
     public void doRequest(@RequestHeader("Host") String host, HttpServletRequest request, HttpServletResponse response, Map<String, Object> context) {
         try {
-            String domain = (String) Splitters.COLON.splitToList(host).get(0);
             String path = request.getRequestURI().substring(request.getContextPath().length() + 1);
             context.put("_PATH_",path);
             response.setCharacterEncoding("UTF-8");
@@ -64,9 +54,6 @@ public class Watcher {
             //监听页面
             boolean isListener=listenerHandler.handle(path,response,context);
             if (isListener) return;
-            //刷新页面
-            boolean isRefresh=refreshHandler.handle(path,response,context);
-            if (isRefresh) return;
             //dubbotest
             boolean isDubboTest=this.dubboHandler.handle(path,response,context);
             if (isDubboTest) return;

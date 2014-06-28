@@ -108,20 +108,11 @@
             <version>1.13</version>
         </dependency>
         <dependency>
-            <groupId>io.terminus.pampas</groupId>
-            <artifactId>pampas-client</artifactId>
-            <version>4.0</version>
-        </dependency>
-        <dependency>
             <groupId>com.github.sgroschupf</groupId>
             <artifactId>zkclient</artifactId>
             <version>0.1</version>
         </dependency>
-        <dependency>
-            <groupId>io.terminus</groupId>
-            <artifactId>terminus-common</artifactId>
-            <version>4.0</version>
-        </dependency>
+
         <dependency>
             <groupId>io.terminus.pampas</groupId>
             <artifactId>pampas-common</artifactId>
@@ -129,12 +120,12 @@
         </dependency>
         <dependency>
             <groupId>io.terminus.pampas</groupId>
-            <artifactId>pampas-engine</artifactId>
+            <artifactId>pampas-engine-api</artifactId>
             <version>4.0</version>
         </dependency>
         <dependency>
             <groupId>io.terminus.pampas</groupId>
-            <artifactId>pampas-webc</artifactId>
+            <artifactId>pampas-client</artifactId>
             <version>4.0</version>
         </dependency>
     </dependencies>
