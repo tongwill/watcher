@@ -15,7 +15,8 @@
        http://code.alibabatech.com/schema/dubbo/dubbo.xsd
        ">
 
-    <context:component-scan base-package="io.terminus.pampas"/>
+
+    <context:component-scan base-package="io.terminus.pampas,com.will.watcher"/>
 
     <bean id="setting" class="com.will.watcher.util.Setting">
         <property name="assetsHome" value="${assetsHome}"/>

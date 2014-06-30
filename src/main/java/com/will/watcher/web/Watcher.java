@@ -1,4 +1,4 @@
-package com.will.watcher;
+package com.will.watcher.web;
 
 import com.google.common.base.Throwables;
 import com.will.watcher.handlebar.Handlebar;

@@ -2,7 +2,7 @@ package com.will.watcher.dubbo;
 
 import com.google.common.base.Throwables;
 import com.will.watcher.util.CommonUtil;
-import com.will.watcher.WatcherVariable;
+import com.will.watcher.util.WatcherVariable;
 import com.will.watcher.yaml.model.ServiceData;
 import io.terminus.pampas.engine.config.model.Service;
 import org.slf4j.Logger;
