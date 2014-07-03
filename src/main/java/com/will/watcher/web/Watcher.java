@@ -1,6 +1,5 @@
 package com.will.watcher.web;
 
-import com.google.common.base.Throwables;
 import com.will.watcher.handlebar.Handlebar;
 import com.will.watcher.handler.AjaxHandler;
 import com.will.watcher.handler.AssetsHandler;
@@ -49,8 +48,7 @@ public class Watcher {
             response.setCharacterEncoding("UTF-8");
             String uri = ((HttpServletRequest) request).getServletPath();
             context = prepareContext(request, context);
-            //登录信息注入
-            UserUtil.putCurrentUser(baseUser);
+
             //监听页面
             boolean isListener=listenerHandler.handle(path,response,context);
             if (isListener) return;
@@ -66,7 +64,7 @@ public class Watcher {
             //handlebars模版
             response.getWriter().write(handlebar.execPath(uri, context, false));
         }catch(Exception e){
-            LOG.error(Throwables.getStackTraceAsString(e));
+            LOG.error("watcher error,{}",e.toString());
         }
     }
 
@@ -76,7 +74,9 @@ public class Watcher {
                 context.put((String) name, request.getParameter((String) name));
             }
         }
-        context.put("_USER_", UserUtil.getCurrentUser());
+        //登录信息注入
+        UserUtil.putCurrentUser(baseUser);
+        context.put("_USER_", baseUser);
         return context;
     }
 }

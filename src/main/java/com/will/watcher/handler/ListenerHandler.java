@@ -1,11 +1,10 @@
 package com.will.watcher.handler;
 
-import com.google.common.base.Throwables;
-import com.will.watcher.util.WatcherVariable;
 import com.will.watcher.dubbo.DubboHelper;
+import com.will.watcher.util.WatcherVariable;
 import com.will.watcher.yaml.BackConfigManager;
-import com.will.watcher.yaml.model.BackData;
 import com.will.watcher.yaml.DataEngine;
+import com.will.watcher.yaml.model.BackData;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -57,7 +56,7 @@ public class ListenerHandler {
                 return false;
             }
         }catch(Exception e){
-            LOG.error(Throwables.getStackTraceAsString(e));
+            LOG.error("listener handler is error,{}",e.toString());
             return true;
         }
     }

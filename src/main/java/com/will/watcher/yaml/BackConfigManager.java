@@ -1,6 +1,6 @@
 package com.will.watcher.yaml;
 
-import com.google.common.base.Throwables;
+import com.google.common.io.Files;
 import com.will.watcher.util.Setting;
 import com.will.watcher.yaml.model.BackData;
 import com.will.watcher.yaml.model.ServiceData;
@@ -11,9 +11,16 @@ import org.springframework.stereotype.Component;
 import org.yaml.snakeyaml.Yaml;
 
 import javax.annotation.PostConstruct;
-import java.io.*;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.OutputStreamWriter;
+import java.nio.charset.Charset;
 import java.nio.file.*;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * Created by tong on 2014/6/21.
@@ -27,6 +34,8 @@ public class BackConfigManager {
 
     private List<ServiceData> datalist = new ArrayList<ServiceData>();
 
+    private Yaml YAML = new Yaml();
+
     @Autowired
     private Setting setting;
 
@@ -34,57 +43,49 @@ public class BackConfigManager {
     public void init() {
         try {
             String pathName = setting.getDataHome();
+            readDataFile(pathName);
             refreshFile(pathName);
-            //初始化文件
-            File directory = new File(pathName);
-            if (directory.isDirectory()) {
-                File[] files = directory.listFiles();
-                for (File file : files) {
-                    readDataFile(file, StandardWatchEventKinds.ENTRY_CREATE);
-                }
-            }
-            convertBackData();
         } catch (Exception e) {
-            LOG.error(Throwables.getStackTraceAsString(e));
+            LOG.error("can not run BackConfigManager,path name is:{}",setting.getDataHome());
         }
     }
 
     private void refreshFile(final String pathName) {
         Thread thread = new Thread(new Runnable() {
             public void run() {
-                while (true) {
-                    try {
-                        WatchService watchService = FileSystems.getDefault().newWatchService();
-                        Path path = Paths.get(pathName);
-                        // 注册监听器
-                        path.register(watchService, StandardWatchEventKinds.ENTRY_MODIFY, StandardWatchEventKinds.ENTRY_CREATE, StandardWatchEventKinds.ENTRY_DELETE);
-                        List<WatchEvent<?>> watchEvents = watchService.take().pollEvents();
-                        for (WatchEvent<?> watchEvent : watchEvents) {
-                            readDataFile(new File(pathName+"/"+ watchEvent.context().toString()), watchEvent.kind());
-                            LOG.info("file reload success");
-                        }
-                        convertBackData();
-                    } catch (Exception e) {
-                        LOG.error(Throwables.getStackTraceAsString(e));
-                    }
+            while (true) {
+                try {
+                    WatchService watchService = FileSystems.getDefault().newWatchService();
+                    Path path = Paths.get(pathName);
+                    // 注册监听器
+                    path.register(watchService, StandardWatchEventKinds.ENTRY_MODIFY,StandardWatchEventKinds.ENTRY_DELETE,StandardWatchEventKinds.ENTRY_CREATE);
+                    List<WatchEvent<?>> watchEvents = watchService.take().pollEvents();
+                    Thread.sleep(1000);
+                    readDataFile(pathName);
+                    LOG.info("file reload success");
+                } catch (Exception e) {
+                    LOG.error("file listener error,{}",e.toString());
                 }
+            }
             }
         });
         thread.start();
     }
 
-    private void readDataFile(File file, WatchEvent.Kind fileKind) throws Exception {
-        if (file.getName().equals("listener.yaml")) return;
-        if (fileKind == StandardWatchEventKinds.ENTRY_DELETE) {
-            dataMap.remove(file.getName());
-            return;
+    private void readDataFile(String pathName) throws Exception {
+        File directory = new File(pathName);
+        if (directory.isDirectory()) {
+            File[] files = directory.listFiles();
+            dataMap.clear();
+            for (File file : files) {
+                if (file.getName().equals("listener.yaml")) continue;
+                if (!file.getName().endsWith(".yaml")) continue;
+                FileInputStream fileInputStream=new FileInputStream(file);
+                BackData backData = (BackData) YAML.loadAs(fileInputStream, BackData.class);
+                fileInputStream.close();
+                dataMap.put(file.getName(), backData);
+            }
         }
-        Yaml YAML = new Yaml();
-        BackData backData = (BackData) YAML.loadAs(new FileInputStream(file), BackData.class);
-        dataMap.put(file.getName(), backData);
-    }
-
-    private void convertBackData() {
         datalist.clear();
         for (BackData backData : dataMap.values()) {
             for (ServiceData serviceData : backData.getDatas().values()) {
@@ -92,6 +93,7 @@ public class BackConfigManager {
             }
         }
     }
+
 
     /**
      * 从后台配置文件中获取数据返回前台
@@ -112,19 +114,14 @@ public class BackConfigManager {
     public void setBackData(BackData backData, String fileName, boolean isAppend) {
         try {
             String filename =setting.getDataHome()+"/"+ fileName + ".yaml";
-            String firstline = "";
-            try {
-                BufferedReader bufferedReader = new BufferedReader(new FileReader(filename));
-                firstline = bufferedReader.readLine();
-            } catch (FileNotFoundException e) {
-
-            }
             OutputStreamWriter outputStreamWriter = new OutputStreamWriter(new FileOutputStream(filename, isAppend), "UTF-8");
-            if (!"datas:".equals(firstline)) {
+            String firstLine=Files.readFirstLine(new File(filename), Charset.forName("UTF-8"));
+            if (firstLine==null||firstLine.length()==0){
                 outputStreamWriter.write("datas:\n");
             }
             for (String key : backData.getDatas().keySet()) {
                 ServiceData serviceData = backData.getDatas().get(key);
+                outputStreamWriter.write("  #"+serviceData.getDesc()+"\n");
                 outputStreamWriter.write("  \"" + key + "\":\n");
                 outputStreamWriter.write("    service: \"" + serviceData.getService() + "\"\n");
                 if (serviceData.getQuery() != null && serviceData.getQuery().length() != 0) {
@@ -135,7 +132,7 @@ public class BackConfigManager {
             outputStreamWriter.flush();
             outputStreamWriter.close();
         } catch (Exception e) {
-            LOG.error(Throwables.getStackTraceAsString(e));
+            LOG.error("can not write yaml file,service:{},file path:{}",backData);
         }
     }
 }

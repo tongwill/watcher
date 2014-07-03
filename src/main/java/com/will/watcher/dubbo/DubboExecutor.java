@@ -56,7 +56,7 @@ public class DubboExecutor {
                         Class paramClass = Class.forName(className);
                         params.put(name, paramClass);
                     } catch (ClassNotFoundException e) {
-
+                        LOG.error("error when init dubbo reference bean. class {}, version {}", new Object[] { Agent.class, service.getApp()});
                     }
                 }
                 return params;
@@ -76,7 +76,8 @@ public class DubboExecutor {
                     return Optional.of((Agent)referenceBean.get());
                 } catch (Exception e) {
                     LOG.error("error when init dubbo reference bean. class {}, version {}", new Object[] { Agent.class, app});
-                }return Optional.absent();
+                }
+                return Optional.absent();
             }
         });
     }
@@ -143,10 +144,10 @@ public class DubboExecutor {
 
     private Agent getAgent(String app) {
         Optional<Agent> referenceOptional = (Optional<Agent>)this.referenceCache.getUnchecked(app);
-        if (referenceOptional.isPresent())
-        {
+        if (referenceOptional.isPresent()){
             return (Agent)referenceOptional.get();
         }
+        LOG.warn("Agent is null,app name is "+app);
         return null;
     }
 }

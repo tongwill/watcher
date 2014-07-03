@@ -3,7 +3,6 @@ package com.will.watcher.handlebar;
 import com.github.jknack.handlebars.Handlebars;
 import com.github.jknack.handlebars.Helper;
 import com.github.jknack.handlebars.Template;
-import com.google.common.base.Throwables;
 import com.google.common.collect.Maps;
 import com.will.watcher.util.JsonUtil;
 import com.will.watcher.yaml.DataEngine;
@@ -57,7 +56,7 @@ public class Handlebar {
             }
             return template.apply(params);
         } catch (Exception e) {
-            LOG.error(Throwables.getStackTraceAsString(e));
+            LOG.error("failed to exec handlebars' template:path={}", path);
         }
         return "";
     }
@@ -70,7 +69,7 @@ public class Handlebar {
             }
             return execPath(path, context, true);
         }catch(Exception e){
-            LOG.error(Throwables.getStackTraceAsString(e));
+            LOG.error("handlebars can not write json to _DATA_,template path is {}",path);
         }
         return "";
     }

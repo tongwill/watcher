@@ -9,6 +9,7 @@ public class ServiceData implements Serializable {
     private String service;
     private String query;
     private String json;
+    private String desc;
 
     public String getService() {
         return service;
@@ -32,5 +33,13 @@ public class ServiceData implements Serializable {
 
     public void setJson(String json) {
         this.json = json;
+    }
+
+    public String getDesc() {
+        return desc==null?"":desc;
+    }
+
+    public void setDesc(String desc) {
+        this.desc = desc;
     }
 }
