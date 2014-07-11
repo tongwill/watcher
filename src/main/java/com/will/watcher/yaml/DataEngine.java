@@ -125,7 +125,7 @@ public class DataEngine {
                 }
             }
         }
-        LOG.warn("no data mapping");
+        LOG.warn("no data mapping,path is "+path);
         return "";
     }
 }
