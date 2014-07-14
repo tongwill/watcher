@@ -74,6 +74,9 @@ public class BackConfigManager {
 
     private void readDataFile(String pathName) throws Exception {
         File directory = new File(pathName);
+        if (!directory.exists()){
+            directory.mkdir();
+        }
         if (directory.isDirectory()) {
             File[] files = directory.listFiles();
             dataMap.clear();
