@@ -21,6 +21,7 @@
     <bean id="setting" class="com.will.watcher.util.Setting">
         <property name="assetsHome" value="${assetsHome}"/>
         <property name="dataHome" value="${dataHome}"/>
+        <property name="sourceHome" value="${sourceHome}"/>
     </bean>
 
     <bean id="baseUser" class="io.terminus.pampas.common.BaseUser">

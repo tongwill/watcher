@@ -6,6 +6,7 @@ package com.will.watcher.util;
 public class Setting {
     private String assetsHome;
     private String dataHome;
+    private String sourceHome;
 
     public String getAssetsHome() {
         return assetsHome;
@@ -21,5 +22,13 @@ public class Setting {
 
     public void setDataHome(String dataHome) {
         this.dataHome = dataHome;
+    }
+
+    public String getSourceHome() {
+        return sourceHome;
+    }
+
+    public void setSourceHome(String sourceHome) {
+        this.sourceHome = sourceHome;
     }
 }
