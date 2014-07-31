@@ -129,33 +129,6 @@
             <artifactId>pampas-client</artifactId>
             <version>4.0</version>
         </dependency>
-
-        <!--cdk-->
-        <dependency>
-            <groupId>com.haier.neusoft.cdk</groupId>
-            <artifactId>CDK-Base-api</artifactId>
-            <version>1.0-SNAPSHOT</version>
-        </dependency>
-        <dependency>
-            <groupId>com.haier.neusoft.cdk</groupId>
-            <artifactId>CDK-Orderbase-api</artifactId>
-            <version>1.0-SNAPSHOT</version>
-        </dependency>
-        <dependency>
-            <groupId>com.haier.neusoft.cdk</groupId>
-            <artifactId>CDK-Hles-api</artifactId>
-            <version>1.0-SNAPSHOT</version>
-        </dependency>
-        <dependency>
-            <groupId>com.haier.neusoft.cdk</groupId>
-            <artifactId>CDK-kpi-api</artifactId>
-            <version>1.0-SNAPSHOT</version>
-        </dependency>
-        <dependency>
-            <groupId>com.haier.neusoft.cdk</groupId>
-            <artifactId>CDK-orderDispatch-api</artifactId>
-            <version>1.0-SNAPSHOT</version>
-        </dependency>
     </dependencies>
 
     <build>

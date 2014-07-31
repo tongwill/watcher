@@ -56,6 +56,7 @@ public class DubboExecutor {
                         Class paramClass = Class.forName(className);
                         params.put(name, paramClass);
                     } catch (ClassNotFoundException e) {
+                        params.put(name, DubboExecutor.UnKnowClass.class);
                         LOG.error("error when init dubbo reference bean. class {}, version {}", new Object[] { Agent.class, service.getApp()});
                     }
                 }
@@ -146,8 +147,12 @@ public class DubboExecutor {
         Optional<Agent> referenceOptional = (Optional<Agent>)this.referenceCache.getUnchecked(app);
         if (referenceOptional.isPresent()){
             return (Agent)referenceOptional.get();
+        }else{
+            this.referenceCache.invalidate(app);
         }
         LOG.warn("Agent is null,app name is "+app);
         return null;
     }
+
+    public static abstract interface UnKnowClass{}
 }
