@@ -76,7 +76,12 @@ public class DubboHandler {
                 //调用方法
                 if (yaml.length()==0){
                     //根据yaml判断是调用方法还是写入文件
-                    json = dubboHelper.invoke(service, app, query,context);
+                    try {
+                        json = dubboHelper.invoke(service, app, query, context);
+                    }catch(Exception e){
+                        json=e.toString();
+                        LOG.error("dubbohandler is error,{}",e.toString());
+                    }
                     if (json.length() != 0) {
                         yaml = app;
                     }

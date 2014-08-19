@@ -5,6 +5,8 @@ import com.will.watcher.handler.AjaxHandler;
 import com.will.watcher.handler.AssetsHandler;
 import com.will.watcher.handler.DubboHandler;
 import com.will.watcher.handler.ListenerHandler;
+import com.will.watcher.util.CommonUtil;
+import com.will.watcher.util.Setting;
 import io.terminus.pampas.common.BaseUser;
 import io.terminus.pampas.common.UserUtil;
 import org.slf4j.Logger;
@@ -40,6 +42,9 @@ public class Watcher {
     @Autowired
     private BaseUser baseUser;
 
+    @Autowired
+    private Setting setting;
+
     @RequestMapping
     public void doRequest(@RequestHeader("Host") String host, HttpServletRequest request, HttpServletResponse response, Map<String, Object> context) {
         try {
@@ -48,7 +53,6 @@ public class Watcher {
             response.setCharacterEncoding("UTF-8");
             String uri = ((HttpServletRequest) request).getServletPath();
             context = prepareContext(request, context);
-
             //监听页面
             boolean isListener=listenerHandler.handle(path,response,context);
             if (isListener) return;
@@ -58,6 +62,13 @@ public class Watcher {
             //静态资源
             boolean isAssert = this.assetsHandler.handle(path, response);
             if (isAssert) return;
+            //是否显示条件
+            if(setting.getShowRequest()){
+                String query=CommonUtil.getQueryFromContext(context);
+                if (query.length()!=0){
+                    LOG.info("request:{}",query);
+                }
+            }
             //ajax请求
             boolean isAjax = this.ajaxHandler.handle(path, response,context);
             if (isAjax) return;

@@ -34,6 +34,8 @@ public class DubboExecutor {
     private DubboHelper dubboHelper;
     @Autowired
     private ApplicationContext applicationContext;
+    @Autowired
+    private BaseUser baseUser;
 
     private DefaultConversionService converter = new DefaultConversionService();
 
@@ -85,7 +87,7 @@ public class DubboExecutor {
 
     public Object exec(Service service, Map<String, Object> params) {
         LinkedHashMap<String, Class> methodParams = (LinkedHashMap) this.methodInfoCache.getUnchecked(service);
-        Map args = Maps.newHashMap();
+        Map<String,Object> args = Maps.newHashMap();
         boolean needContext = false;
         for (String paramName : methodParams.keySet()) {
             Class paramClass = (Class) methodParams.get(paramName);
@@ -97,7 +99,7 @@ public class DubboExecutor {
             }
         }
         Agent agent = getAgent(service.getApp());
-        WrapResp wrapResp = agent.call(service.getUri(), args, needContext ? params : null);
+        WrapResp wrapResp = agent.call(service.getUri(), args, needContext ? params : null,baseUser);
         if (wrapResp.getCookie() != null) {
             UserUtil.getInnerCookie().merge(wrapResp.getCookie());
         }

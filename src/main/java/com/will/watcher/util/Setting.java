@@ -7,6 +7,7 @@ public class Setting {
     private String assetsHome;
     private String dataHome;
     private String sourceHome;
+    private boolean showRequest=false;
 
     public String getAssetsHome() {
         return assetsHome;
@@ -30,5 +31,13 @@ public class Setting {
 
     public void setSourceHome(String sourceHome) {
         this.sourceHome = sourceHome;
+    }
+
+    public boolean getShowRequest() {
+        return showRequest;
+    }
+
+    public void setShowRequest(boolean showRequest) {
+        this.showRequest = showRequest;
     }
 }

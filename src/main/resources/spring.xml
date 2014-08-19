@@ -22,6 +22,7 @@
         <property name="assetsHome" value="${assetsHome}"/>
         <property name="dataHome" value="${dataHome}"/>
         <property name="sourceHome" value="${sourceHome}"/>
+        <property name="showRequest" value="${showRequest}"/>
     </bean>
 
     <bean id="baseUser" class="io.terminus.pampas.common.BaseUser">

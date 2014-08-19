@@ -1,7 +1,7 @@
 package com.will.watcher.yaml;
 
-import com.will.watcher.util.WatcherVariable;
 import com.will.watcher.dubbo.DubboListener;
+import com.will.watcher.util.WatcherVariable;
 import com.will.watcher.yaml.model.ServiceData;
 import io.terminus.pampas.engine.config.model.Mapping;
 import io.terminus.pampas.engine.config.model.Service;
@@ -25,7 +25,6 @@ public class DataEngine {
     private ConfigManager configManager;
     @Autowired
     private DubboListener dubboListener;
-
 
     private String getComponentFront(String path){
         String front="";

@@ -9,6 +9,10 @@
     <version>4.0</version>
     <packaging>war</packaging>
 
+    <properties>
+        <pampas.version>4.1.1</pampas.version>
+    </properties>
+
     <dependencies>
         <dependency>
             <groupId>com.alibaba</groupId>
@@ -117,17 +121,17 @@
         <dependency>
             <groupId>io.terminus.pampas</groupId>
             <artifactId>pampas-common</artifactId>
-            <version>4.0</version>
+            <version>${pampas.version}</version>
         </dependency>
         <dependency>
             <groupId>io.terminus.pampas</groupId>
             <artifactId>pampas-engine-api</artifactId>
-            <version>4.0</version>
+            <version>${pampas.version}</version>
         </dependency>
         <dependency>
             <groupId>io.terminus.pampas</groupId>
             <artifactId>pampas-client</artifactId>
-            <version>4.0</version>
+            <version>${pampas.version}</version>
         </dependency>
     </dependencies>
 
