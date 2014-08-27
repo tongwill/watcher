@@ -65,7 +65,12 @@ public class Handlebar {
         try{
             String json=dataEngine.getJsonFromData(path,context,true);
             if (json.length()!=0){
-                context.put("_DATA_",jsonUtil.fromJson(json, LinkedHashMap.class));
+                LinkedHashMap data=jsonUtil.fromJson(json, LinkedHashMap.class);
+                if (data==null){
+                    context.put("_DATA_",json);
+                }else{
+                    context.put("_DATA_",data);
+                }
             }
             return execPath(path, context, true);
         }catch(Exception e){
