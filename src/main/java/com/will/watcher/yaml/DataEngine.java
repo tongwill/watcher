@@ -87,13 +87,15 @@ public class DataEngine {
 
     public String getJsonFromData(String path,Map<String, Object> context,boolean isComponent){
         Service service=getBackService(path,isComponent);
+        String back="";
         if (service==null){
-            return "";
+            back=path;
+        }else{
+            if (WatcherVariable.IS_DUBBO_LISTENER){
+                return dubboListener.listener(service,context);
+            }
+            back=service.getUri();
         }
-        if (WatcherVariable.IS_DUBBO_LISTENER){
-            return dubboListener.listener(service,context);
-        }
-        String back=service.getUri();
         for (ServiceData serviceData:backConfigManager.getServiceDataList()){
             if(serviceData.getService().equals(back)){
                 if (serviceData.getQuery()!=null&&serviceData.getQuery().length()!=0){

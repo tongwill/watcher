@@ -73,7 +73,12 @@ public class Watcher {
             boolean isAjax = this.ajaxHandler.handle(path, response,context);
             if (isAjax) return;
             //handlebars模版
-            response.getWriter().write(handlebar.execPath(uri, context, false));
+            String html=handlebar.execPath(uri, context, false);
+            if(html.length()!=0){
+                response.getWriter().write(html);
+            }else{
+                response.getWriter().write("no result");
+            }
         }catch(Exception e){
             LOG.error("watcher error,{}",e.toString());
         }

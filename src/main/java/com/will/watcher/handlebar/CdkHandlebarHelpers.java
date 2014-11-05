@@ -78,6 +78,24 @@ public class CdkHandlebarHelpers {
                 return options.inverse();
             }
         });
+        this.handlebarEngine.registerHelper("notEqualsSize" , new Helper<Object>(){
+            public CharSequence apply(Object object, Options options) throws IOException {
+                if (object instanceof String) {
+                    if (((String) object).length() != ((Integer) options.param(0)).intValue()) {
+                        return options.fn();
+                    } else {
+                        options.inverse();
+                    }
+                } else if (object instanceof Collection) {
+                    if (((Collection) object).size() != ((Integer) options.param(0)).intValue()) {
+                        return options.fn();
+                    } else {
+                        options.inverse();
+                    }
+                }
+                return options.inverse();
+            }
+        });
         this.handlebarEngine.registerHelper("gtSize" , new Helper<Object>(){
             public CharSequence apply(Object object, Options options) throws IOException {
                 if (object instanceof String) {
